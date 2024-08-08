@@ -16,7 +16,7 @@ type User struct {
 	Password  string `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `gorm:"index"`
+	DeletedAt gorm.DeletedAt `gorm:"-"`
 }
 
 func main() {
@@ -37,6 +37,10 @@ func main() {
 	}
 	db.Create(&users)
 
+	DeleteUser(db)
+
+	SoftDeleteUser(db)
+
 }
 
 func DeleteUser(db *gorm.DB) {
@@ -50,4 +54,22 @@ func DeleteUser(db *gorm.DB) {
 	db.Delete(&User{}, "email = ?", "siti.nurhaliza@example.com")
 
 	fmt.Println("User with email siti.nurhaliza@example.com has been deleted")
+}
+
+func SoftDeleteUser(db *gorm.DB) {
+	// Menghapus user (soft delete)
+	db.Delete(&User{}, 1)
+	fmt.Printf("User with ID %d has been soft deleted\n", 1)
+}
+
+func RestoreDatauser(db *gorm.DB) {
+	// Mengembalikan semua user termasuk yang soft deleted
+	var allUsers []User
+	db.Unscoped().Find(&allUsers)
+	fmt.Println("All users (including soft deleted):", allUsers)
+
+	// Mengembalikan semua user tanpa yang soft deleted
+	var activeUsers []User
+	db.Find(&activeUsers)
+	fmt.Println("Active users:", activeUsers)
 }

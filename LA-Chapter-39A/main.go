@@ -41,6 +41,9 @@ func main() {
 
 	SoftDeleteUser(db)
 
+	GetAllUserSoftDelete(db)
+
+	RestoreDataUser(db, 1)
 }
 
 func DeleteUser(db *gorm.DB) {
@@ -62,7 +65,7 @@ func SoftDeleteUser(db *gorm.DB) {
 	fmt.Printf("User with ID %d has been soft deleted\n", 1)
 }
 
-func RestoreDatauser(db *gorm.DB) {
+func GetAllUsersIncludingSoftDeleted(db *gorm.DB) {
 	// Mengembalikan semua user termasuk yang soft deleted
 	var allUsers []User
 	db.Unscoped().Find(&allUsers)
@@ -72,4 +75,34 @@ func RestoreDatauser(db *gorm.DB) {
 	var activeUsers []User
 	db.Find(&activeUsers)
 	fmt.Println("Active users:", activeUsers)
+}
+
+func GetAllUserSoftDelete(db *gorm.DB) {
+	// Menampilkan list data user yang sudah dihapus
+	var deletedUsers []User
+	db.Unscoped().Where("deleted_at IS NOT NULL").Find(&deletedUsers)
+
+	fmt.Println("List User yang Dihapus:")
+	for _, user := range deletedUsers {
+		fmt.Printf("ID: %d, Name: %s, Email: %s, DeletedAt: %v\n", user.ID, user.Name, user.Email, user.DeletedAt)
+	}
+}
+
+func RestoreDataUser(db *gorm.DB, id int) {
+	// Restore user yang sudah dihapus (misalnya dengan ID 1)
+	var deletedUser User
+	if err := db.Unscoped().First(&deletedUser, id).Error; err != nil {
+		fmt.Println("User not found:", err)
+		return
+	}
+
+	db.Model(&deletedUser).Update("DeletedAt", nil)
+
+	// Verifikasi bahwa user sudah di-restore
+	var restoredUser User
+	if err := db.First(&restoredUser, 1).Error; err != nil {
+		fmt.Println("Failed to restore user:", err)
+		return
+	}
+	fmt.Println("Restored user:", restoredUser)
 }

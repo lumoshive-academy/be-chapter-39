@@ -16,7 +16,7 @@ type User struct {
 	Password  string `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"-"` // fiels for soft delete
 }
 
 func main() {
@@ -37,12 +37,16 @@ func main() {
 	}
 	db.Create(&users)
 
+	// implementation delete data user by condition
 	DeleteUser(db)
 
+	// implementation soft delete
 	SoftDeleteUser(db)
 
+	// implementation get all soft delete
 	GetAllUserSoftDelete(db)
 
+	// implementation restore data user soft delete
 	RestoreDataUser(db, 1)
 }
 

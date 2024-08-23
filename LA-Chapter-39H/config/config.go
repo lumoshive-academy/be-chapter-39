@@ -12,6 +12,7 @@ type Config struct {
 	DBUser     string
 	DBPassword string
 	DBName     string
+	AppDebug   bool
 }
 
 func LoadConfig() Config {

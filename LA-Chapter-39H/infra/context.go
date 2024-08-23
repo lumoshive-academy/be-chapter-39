@@ -1,4 +1,4 @@
-package context
+package infra
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ func NewServiceContext() *ServiceContext {
 
 	config := config.LoadConfig()
 
-	log, err := log.InitZapLogger()
+	log, err := log.InitZapLogger(config)
 
 	if err != nil {
 		fmt.Println("can't init service context %w", err.Error())

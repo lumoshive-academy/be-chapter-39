@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"golang-chapter-39/LA-Chapter-39H/models"
-	"golang-chapter-39/LA-Chapter-39H/service"
+	"golang-chapter-39/LA-Chapter-39H-I/models"
+	"golang-chapter-39/LA-Chapter-39H-I/service"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"

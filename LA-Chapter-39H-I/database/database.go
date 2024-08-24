@@ -2,7 +2,8 @@ package database
 
 import (
 	"fmt"
-	"golang-chapter-39/LA-Chapter-39H/config"
+	"golang-chapter-39/LA-Chapter-39H-I/config"
+
 	"log"
 	"os"
 	"time"
@@ -12,7 +13,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func ConnectDB(cfg config.Config) *gorm.DB {
+func ConnectDB(cfg config.Config) (*gorm.DB, error) {
 	// logger database
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
@@ -24,19 +25,22 @@ func ConnectDB(cfg config.Config) *gorm.DB {
 		},
 	)
 
+	// open connection db
 	db, err := gorm.Open(postgres.Open(makePostgresString(cfg)), &gorm.Config{
 		Logger: newLogger,
 	})
 
 	if err != nil {
-		log.Fatalf("failed to connect database: %v", err)
+		return nil, fmt.Errorf("failed to connect database: %v", err)
 	}
 
+	// migration table of struct
 	Migrate(db)
 
-	return db
+	return db, nil
 }
 
+// make configuration string
 func makePostgresString(cfg config.Config) string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBName, cfg.DBPassword)

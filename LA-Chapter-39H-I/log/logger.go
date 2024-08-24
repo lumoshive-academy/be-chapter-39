@@ -1,7 +1,7 @@
 package log
 
 import (
-	"golang-chapter-39/LA-Chapter-39H/config"
+	"golang-chapter-39/LA-Chapter-39H-I/config"
 
 	"go.uber.org/zap"
 )

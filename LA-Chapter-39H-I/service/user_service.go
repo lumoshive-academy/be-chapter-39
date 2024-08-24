@@ -1,8 +1,8 @@
 package service
 
 import (
-	"golang-chapter-39/LA-Chapter-39H/models"
-	"golang-chapter-39/LA-Chapter-39H/repository"
+	"golang-chapter-39/LA-Chapter-39H-I/models"
+	"golang-chapter-39/LA-Chapter-39H-I/repository"
 )
 
 type UserService struct {

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/viper"
 )
@@ -16,17 +16,36 @@ type Config struct {
 }
 
 func LoadConfig() (Config, error) {
-	viper.SetConfigFile(".env")
 
+	localEnv := viper.New()
+	localEnv.SetConfigType("dotenv")
+	viper.SetConfigFile(".env") // Specify the config file name
+
+	// Set default values
+	viper.SetDefault("DBHost", "localhost")
+	viper.SetDefault("DBPort", "5432")
+	viper.SetDefault("DBUser", "user")
+	viper.SetDefault("DBPassword", "password")
+	viper.SetDefault("DBName", "database")
+	viper.SetDefault("AppDebug", true)
+
+	// Allow Viper to read environment variables
+	viper.AutomaticEnv()
+
+	// Read the configuration file
 	err := viper.ReadInConfig()
 	if err != nil {
-		return Config{}, fmt.Errorf("error reading config file, %s", err)
+		log.Printf("Error reading config file: %s, using default values or environment variables", err)
 	}
 
-	var config Config
-	err = viper.Unmarshal(&config)
-	if err != nil {
-		return Config{}, fmt.Errorf("unable to decode into struct, %v", err)
+	// add value to the config
+	config := Config{
+		DBHost:     viper.GetString("DB_HOST"),
+		DBPort:     viper.GetString("DB_PORT"),
+		DBUser:     viper.GetString("DB_USER"),
+		DBPassword: viper.GetString("DB_PASSWORD"),
+		DBName:     viper.GetString("DB_NAME"),
+		AppDebug:   viper.GetBool("APP_DEBUG"),
 	}
 
 	return config, nil

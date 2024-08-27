@@ -12,7 +12,7 @@ func main() {
 		log.Fatal("can't init service context %w", err)
 	}
 
-	r := routes.SetupRouter(*ctx)
+	r := routes.NewRoutes(*ctx)
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)

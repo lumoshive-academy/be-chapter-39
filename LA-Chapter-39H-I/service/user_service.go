@@ -5,26 +5,33 @@ import (
 	"golang-chapter-39/LA-Chapter-39H-I/repository"
 )
 
-type UserService struct {
+type UserService interface {
+	CreateUser(user models.User) error
+	GetUser(id uint) (models.User, error)
+	UpdateUser(user models.User) error
+	DeleteUser(id uint) error
+}
+
+type userService struct {
 	repo repository.UserRepository
 }
 
-func NewUserService(repo repository.UserRepository) *UserService {
-	return &UserService{repo}
+func NewUserService(repo repository.UserRepository) UserService {
+	return &userService{repo}
 }
 
-func (s *UserService) CreateUser(user models.User) error {
+func (s *userService) CreateUser(user models.User) error {
 	return s.repo.CreateUser(user)
 }
 
-func (s *UserService) GetUser(id uint) (models.User, error) {
+func (s *userService) GetUser(id uint) (models.User, error) {
 	return s.repo.GetUser(id)
 }
 
-func (s *UserService) UpdateUser(user models.User) error {
+func (s *userService) UpdateUser(user models.User) error {
 	return s.repo.UpdateUser(user)
 }
 
-func (s *UserService) DeleteUser(id uint) error {
+func (s *userService) DeleteUser(id uint) error {
 	return s.repo.DeleteUser(id)
 }

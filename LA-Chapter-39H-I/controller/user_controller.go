@@ -34,11 +34,11 @@ func responseError(c *gin.Context, errorCode string, description string, httpSta
 }
 
 type UserController struct {
-	service *service.UserService
+	service service.UserService
 	logger  *zap.Logger
 }
 
-func NewUserController(service *service.UserService, logger *zap.Logger) *UserController {
+func NewUserController(service service.UserService, logger *zap.Logger) *UserController {
 	return &UserController{service, logger}
 }
 
